@@ -18,20 +18,142 @@
   const GLOBAL_CHEATS_KEY = "tqplus:v3:globalCheats";
 
   // ===================== DATA (present-based for all tenses) =====================
-  const PRESENT = {
-    1:[{en:"Who?",es:"¿Quién?"},{en:"What?",es:"¿Qué?"},{en:"Where?",es:"¿Dónde?"},{en:"When?",es:"¿Cuándo?"},{en:"Why?",es:"¿Por qué?"},{en:"How?",es:"¿Cómo?"},{en:"Which?",es:"¿Cuál?"},{en:"Whose?",es:"¿De quién?"},{en:"How many?",es:"¿Cuántos?"},{en:"How much?",es:"¿Cuánto?"},{en:"From where?",es:"¿De dónde?"},{en:"To where?",es:"¿Adónde?"},{en:"Since when?",es:"¿Desde cuándo?"},{en:"Until when?",es:"¿Hasta cuándo?"},{en:"How often?",es:"¿Con qué frecuencia?"},{en:"How old?",es:"¿Cuántos años?"}],
-    2:[{en:"Who is it?",es:"¿Quién es?"},{en:"What is it?",es:"¿Qué es?"},{en:"Where are you?",es:"¿Dónde estás?"},{en:"When is it?",es:"¿Cuándo es?"},{en:"Why is it cold?",es:"¿Por qué hace frío?"},{en:"How are you?",es:"¿Cómo estás?"},{en:"Which one?",es:"¿Cuál?"},{en:"Whose book is it?",es:"¿De quién es el libro?"},{en:"How many students?",es:"¿Cuántos estudiantes?"},{en:"How much money?",es:"¿Cuánto dinero?"},{en:"Where is it?",es:"¿Dónde está?"},{en:"When do we meet?",es:"¿Cuándo nos vemos?"}],
-    3:[{en:"Who are you?",es:"¿Quién eres?"},{en:"What do you want?",es:"¿Qué quieres?"},{en:"Where do you live?",es:"¿Dónde vives?"},{en:"When do you study?",es:"¿Cuándo estudias?"},{en:"Why are you here?",es:"¿Por qué estás aquí?"},{en:"How do you feel?",es:"¿Cómo te sientes?"},{en:"Which is your house?",es:"¿Cuál es tu casa?"},{en:"Whose idea is it?",es:"¿De quién es la idea?"},{en:"How many brothers do you have?",es:"¿Cuántos hermanos tienes?"},{en:"How much water do you drink?",es:"¿Cuánta agua bebes?"}],
-    4:[{en:"Who is your teacher?",es:"¿Quién es tu profesor?"},{en:"What time is it?",es:"¿Qué hora es?"},{en:"Where do you work?",es:"¿Dónde trabajas?"},{en:"When do you sleep?",es:"¿Cuándo duermes?"},{en:"Why are you sad?",es:"¿Por qué estás triste?"},{en:"How do you learn?",es:"¿Cómo aprendes?"},{en:"Which subject do you like?",es:"¿Qué asignatura te gusta?"},{en:"Whose car is this?",es:"¿De quién es este coche?"},{en:"How many friends do you have?",es:"¿Cuántos amigos tienes?"},{en:"How long is the class?",es:"¿Cuánto dura la clase?"}],
-    5:[{en:"Who are they?",es:"¿Quiénes son ellos?"},{en:"What are you doing?",es:"¿Qué haces?"},{en:"Where are you going?",es:"¿Adónde vas?"},{en:"When do you arrive?",es:"¿Cuándo llegas?"},{en:"Why are you late?",es:"¿Por qué llegas tarde?"},{en:"How do you know?",es:"¿Cómo sabes?"},{en:"Which one do you prefer?",es:"¿Cuál prefieres?"},{en:"Whose idea is that?",es:"¿De quién es esa idea?"},{en:"How many languages do you speak?",es:"¿Cuántos idiomas hablas?"},{en:"How much time do we have?",es:"¿Cuánto tiempo tenemos?"}],
-    6:[{en:"Who helps you?",es:"¿Quién te ayuda?"},{en:"What do you need?",es:"¿Qué necesitas?"},{en:"Where is your house?",es:"¿Dónde está tu casa?"},{en:"When do you eat lunch?",es:"¿Cuándo almuerzas?"},{en:"Why do you study Spanish?",es:"¿Por qué estudias español?"},{en:"How do you get to school?",es:"¿Cómo llegas a la escuela?"},{en:"Which class are you in?",es:"¿En qué clase estás?"},{en:"Whose turn is it?",es:"¿De quién es el turno?"},{en:"How many pets do you have?",es:"¿Cuántas mascotas tienes?"},{en:"How much does it cost?",es:"¿Cuánto cuesta?"}],
-    7:[{en:"Who helps you at home?",es:"¿Quién te ayuda en casa?"},{en:"What do you eat for breakfast?",es:"¿Qué desayunas?"},{en:"Where do you go on weekends?",es:"¿Adónde vas los fines de semana?"},{en:"When do you wake up?",es:"¿Cuándo te despiertas?"},{en:"Why do you run?",es:"¿Por qué corres?"},{en:"How do you feel today?",es:"¿Cómo te sientes hoy?"},{en:"Which movie do you like?",es:"¿Qué película te gusta?"},{en:"Whose phone is this?",es:"¿De quién es este teléfono?"},{en:"How many hours do you study?",es:"¿Cuántas horas estudias?"},{en:"How much homework do you have?",es:"¿Cuánta tarea tienes?"}],
-    8:[{en:"Who is calling?",es:"¿Quién llama?"},{en:"What are they doing?",es:"¿Qué hacen?"},{en:"Where do you go every day?",es:"¿Adónde vas cada día?"},{en:"When do you finish work?",es:"¿Cuándo terminas el trabajo?"},{en:"Why are you tired?",es:"¿Por qué estás cansado?"},{en:"How do you travel to school?",es:"¿Cómo viajas a la escuela?"},{en:"Which color do you like?",es:"¿Qué color te gusta?"},{en:"Whose bag is that?",es:"¿De quién es esa bolsa?"},{en:"How many people live here?",es:"¿Cuántas personas viven aquí?"},{en:"How much water do you drink every day?",es:"¿Cuánta agua bebes cada día?"}],
-    9:[{en:"Who opens the door?",es:"¿Quién abre la puerta?"},{en:"What do you say?",es:"¿Qué dices?"},{en:"Where do you go after class?",es:"¿Adónde vas después de clase?"},{en:"When do you arrive at school?",es:"¿Cuándo llegas a la escuela?"},{en:"Why do you leave early?",es:"¿Por qué te vas temprano?"},{en:"How do you do it?",es:"¿Cómo lo haces?"},{en:"Which car do you choose?",es:"¿Qué coche eliges?"},{en:"Whose shoes are these?",es:"¿De quién son estos zapatos?"},{en:"How many students pass?",es:"¿Cuántos estudiantes aprueban?"},{en:"How much milk do you drink?",es:"¿Cuánta leche bebes?"}],
-    10:[{en:"Who are you waiting for?",es:"¿A quién esperas?"},{en:"What are you thinking about?",es:"¿En qué piensas?"},{en:"Where do you want to go?",es:"¿Adónde quieres ir?"},{en:"When do you return home?",es:"¿Cuándo vuelves a casa?"},{en:"Why are you here?",es:"¿Por qué estás aquí?"},{en:"How do you learn so much?",es:"¿Cómo aprendes tanto?"},{en:"Which of these do you prefer?",es:"¿Cuál de estos prefieres?"},{en:"Whose turn is it to cook?",es:"¿De quién es el turno de cocinar?"},{en:"How many books do you read?",es:"¿Cuántos libros lees?"},{en:"How much time do we have?",es:"¿Cuánto tiempo tenemos?"}]
-  };
-  const deepCopy = obj => JSON.parse(JSON.stringify(obj));
-  const DATASETS = { Present: PRESENT, Past: deepCopy(PRESENT), Future: deepCopy(PRESENT) };
+  // GAME 1 — Describing yourself & routine + Peer pressure (Present Tense)
+// Direction: English -> Spanish
+// Rules applied:
+// - Only final ? is used in answers (no inverted ¿ needed)
+// - Accents required
+// - Pronouns not required EXCEPT "usted" must appear when marked (formal)
+// - Connector for Game 1 appears in later levels: "porque"
+
+const PRESENT = {
+  // Level 1 — super simple, short, no reflexives, no connectors
+  1: [
+    { en: "My name is Sean", es: "Me llamo Sean" },
+    { en: "I am a student", es: "Soy estudiante" },
+    { en: "I am Irish", es: "Soy irlandés" },
+    { en: "I am 17 years old", es: "Tengo 17 años" },
+    { en: "I live in Dublin", es: "Vivo en Dublín" },
+    { en: "I go to school", es: "Voy al colegio" },
+    { en: "I like music", es: "Me gusta la música" },
+    { en: "I like sport", es: "Me gusta el deporte" },
+    { en: "I have one brother", es: "Tengo un hermano" },
+    { en: "Peer pressure is a problem", es: "La presión de grupo es un problema" }
+  ],
+
+  // Levels 2–10 — unchanged difficulty ramp, with questions using only final '?'
+  2: [
+    { en: "My school is big", es: "Mi colegio es grande" },
+    { en: "I live near the school", es: "Vivo cerca del colegio" },
+    { en: "I like music and football", es: "Me gusta la música y el fútbol" },
+    { en: "I eat breakfast at home", es: "Desayuno en casa" },
+    { en: "I walk to school", es: "Camino al colegio" },
+    { en: "I do my homework in the afternoon", es: "Hago los deberes por la tarde" },
+    { en: "It is hard to say no", es: "Es difícil decir que no" },
+    { en: "I say no to drugs", es: "Digo no a las drogas" },
+    { en: "Do you like Spanish?", es: "Te gusta el español?" },      // tú
+    { en: "Do you smoke? (formal)", es: "Fuma usted?" }              // usted required
+  ],
+  3: [
+    { en: "I get on well with my friends", es: "Me llevo bien con mis amigos" },
+    { en: "I help at home", es: "Ayudo en casa" },
+    { en: "I cook sometimes", es: "Cocino a veces" },
+    { en: "I use my phone too much", es: "Uso el móvil demasiado" },
+    { en: "Social media pressures young people", es: "Las redes sociales presionan a los jóvenes" },
+    { en: "I avoid alcohol", es: "Evito el alcohol" },
+    { en: "I prefer healthy habits", es: "Prefiero hábitos saludables" },
+    { en: "Do you play sport?", es: "Practicas deporte?" },
+    { en: "Do you study every day? (formal)", es: "Estudia usted todos los días?" },
+    { en: "I study because I want a good future", es: "Estudio porque quiero un buen futuro" }
+  ],
+  4: [
+    { en: "I usually take the bus", es: "Suelo coger el autobús" },
+    { en: "I drink water at school", es: "Bebo agua en el colegio" },
+    { en: "I bring a packed lunch", es: "Llevo un almuerzo" },
+    { en: "I practise the guitar", es: "Practico la guitarra" },
+    { en: "I relax with my friends", es: "Me relajo con mis amigos" },
+    { en: "I avoid bad influences", es: "Evito las malas influencias" },
+    { en: "I choose real friends", es: "Elijo amigos de verdad" },
+    { en: "Do you feel pressure?", es: "Sientes presión?" },
+    { en: "Do you vape? (formal)", es: "Vapea usted?" },
+    { en: "I say no because it is dangerous", es: "Digo que no porque es peligroso" }
+  ],
+  5: [
+    { en: "On weekdays I wake up early", es: "Entre semana me despierto temprano" },
+    { en: "I get dressed quickly", es: "Me visto rápido" },
+    { en: "I arrive at school on time", es: "Llego al colegio a tiempo" },
+    { en: "I pay attention in class", es: "Presto atención en clase" },
+    { en: "I eat well and I sleep well", es: "Como bien y duermo bien" },
+    { en: "I refuse cigarettes", es: "Rechazo los cigarrillos" },
+    { en: "I avoid fights", es: "Evito las peleas" },
+    { en: "Do you help your friends?", es: "Ayudas a tus amigos?" },
+    { en: "Do you drink alcohol? (formal)", es: "Bebe usted alcohol?" },
+    { en: "I choose my path because it is right", es: "Elijo mi camino porque es correcto" }
+  ],
+  6: [
+    { en: "After school I study for an hour", es: "Después del colegio estudio una hora" },
+    { en: "At the weekend I rest", es: "El fin de semana descanso" },
+    { en: "I go out with friends", es: "Salgo con amigos" },
+    { en: "I play video games a little", es: "Juego a los videojuegos un poco" },
+    { en: "I practice sport in the evening", es: "Practico deporte por la tarde" },
+    { en: "Peer pressure affects confidence", es: "La presión de grupo afecta a la confianza" },
+    { en: "I support my friends", es: "Apoyo a mis amigos" },
+    { en: "Do you tell the truth?", es: "Dices la verdad?" },
+    { en: "Do you feel confident? (formal)", es: "Se siente usted seguro?" },
+    { en: "I say no because I respect myself", es: "Digo que no porque me respeto" }
+  ],
+  7: [
+    { en: "I have a balanced routine", es: "Tengo una rutina equilibrada" },
+    { en: "I limit the phone at night", es: "Limito el móvil por la noche" },
+    { en: "I look after my mental health", es: "Cuido mi salud mental" },
+    { en: "I talk with my parents", es: "Hablo con mis padres" },
+    { en: "I avoid toxic behaviour", es: "Evito el comportamiento tóxico" },
+    { en: "I choose good company", es: "Elijo buena compañía" },
+    { en: "I focus on my goals", es: "Me concentro en mis metas" },
+    { en: "Do you respect the rules?", es: "Respetas las normas?" },
+    { en: "Do you need help? (formal)", es: "Necesita usted ayuda?" },
+    { en: "I say no because I have values", es: "Digo que no porque tengo valores" }
+  ],
+  8: [
+    { en: "Every day I make my bed", es: "Cada día hago la cama" },
+    { en: "I prepare my bag the night before", es: "Preparo la mochila la noche anterior" },
+    { en: "I eat fruit and vegetables", es: "Como fruta y verduras" },
+    { en: "I revise a little each day", es: "Repaso un poco cada día" },
+    { en: "I avoid parties during exams", es: "Evito las fiestas durante los exámenes" },
+    { en: "I speak kindly to others", es: "Hablo con amabilidad a los demás" },
+    { en: "I control my stress", es: "Controlo mi estrés" },
+    { en: "Do you pressure others?", es: "Presionas a los demás?" },
+    { en: "Do you set a good example? (formal)", es: "Da usted buen ejemplo?" },
+    { en: "I say no because I am responsible", es: "Digo que no porque soy responsable" }
+  ],
+  9: [
+    { en: "I manage my time well", es: "Gestiono bien mi tiempo" },
+    { en: "I avoid gossip", es: "Evito los chismes" },
+    { en: "I surround myself with positive people", es: "Me rodeo de gente positiva" },
+    { en: "I trust my best friend", es: "Confío en mi mejor amigo" },
+    { en: "I practise mindfulness", es: "Practico la atención plena" },
+    { en: "I reject dangerous trends", es: "Rechazo las modas peligrosas" },
+    { en: "I take healthy decisions", es: "Tomo decisiones saludables" },
+    { en: "Do you accept yourself?", es: "Te aceptas a ti mismo?" },
+    { en: "Do you avoid drugs? (formal)", es: "Evita usted las drogas?" },
+    { en: "I say no because my health matters", es: "Digo que no porque mi salud importa" }
+  ],
+  10: [
+    { en: "I balance study, sport, and rest", es: "Equilibro estudio, deporte y descanso" },
+    { en: "I organise my day carefully", es: "Organizo mi día con cuidado" },
+    { en: "I protect my identity online", es: "Protejo mi identidad en línea" },
+    { en: "I resist group pressure at parties", es: "Resisto la presión del grupo en las fiestas" },
+    { en: "I choose friends who respect me", es: "Elijo amigos que me respetan" },
+    { en: "I build self-esteem with good habits", es: "Construyo la autoestima con buenos hábitos" },
+    { en: "I make decisions that help my future", es: "Tomo decisiones que ayudan a mi futuro" },
+    { en: "Do you support your classmates?", es: "Apoyas a tus compañeros?" },
+    { en: "Do you take responsibility? (formal)", es: "Asume usted la responsabilidad?" },
+    { en: "I say no because it goes against my values", es: "Digo que no porque va en contra de mis valores" }
+  ]
+};
+
+const deepCopy = obj => JSON.parse(JSON.stringify(obj));
+const DATASETS = { Present: PRESENT, Past: deepCopy(PRESENT), Future: deepCopy(PRESENT) };
 
   // ===================== Global cheats =====================
   const clampCheats = n => Math.max(0, Math.min(GLOBAL_CHEATS_MAX, n|0));
