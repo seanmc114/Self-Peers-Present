@@ -18,189 +18,136 @@
   const GLOBAL_CHEATS_KEY = "tqplus:v3:globalCheats";
 
   // ===================== DATA (present-based for all tenses) =====================
- const PRESENT = {
+// ===================== DATA (present-based for all tenses) =====================
+const PRESENT = {
   1: [
     { en: "I am Irish.", es: "Soy irlandés." },
     { en: "I am a student.", es: "Soy estudiante." },
+    { en: "Where do you live?", es: "Dónde vives?" },
     { en: "I live in Dublin.", es: "Vivo en Dublín." },
-    { en: "I live with my family.", es: "Vivo con mi familia." },
-    { en: "Do you have a pet?", es: "Tienes una mascota?" },
-    { en: "I do not have brothers.", es: "No tengo hermanos." },
-    { en: "Do you have sisters?", es: "Tienes hermanas?" },
-    { en: "I am sixteen years old.", es: "Tengo dieciséis años." },
-    { en: "What is your name?", es: "Cómo te llamas?" },
-    { en: "My name is Daniel.", es: "Me llamo Daniel." },
-    { en: "I like music.", es: "Me gusta la música." },
-    { en: "I do not like coffee.", es: "No me gusta el café." },
-    { en: "Do you like football?", es: "Te gusta el fútbol?" },
     { en: "Where are you from?", es: "De dónde eres?" },
     { en: "I am from Ireland.", es: "Soy de Irlanda." },
-    { en: "Do you speak Spanish?", es: "Hablas español?" }
+    { en: "What is your name?", es: "Cómo te llamas?" },
+    { en: "My name is Aoife.", es: "Me llamo Aoife." },
+    { en: "Do you speak Spanish?", es: "Hablas español?" },
+    { en: "I speak a little Spanish.", es: "Hablo un poco de español." },
+    { en: "I don’t speak French.", es: "No hablo francés." },
+    { en: "Do you have a pet?", es: "Tienes una mascota?" }
   ],
   2: [
+    { en: "What time do you get up?", es: "A qué hora te levantas?" },
     { en: "I get up at seven.", es: "Me levanto a las siete." },
     { en: "Do you get up early?", es: "Te levantas temprano?" },
-    { en: "I do not get up late.", es: "No me levanto tarde." },
+    { en: "I don’t get up late.", es: "No me levanto tarde." },
     { en: "I have a quick shower.", es: "Me ducho rápido." },
     { en: "Do you take a shower in the morning?", es: "Te duchas por la mañana?" },
     { en: "I brush my teeth.", es: "Me cepillo los dientes." },
-    { en: "I get dressed quickly.", es: "Me visto rápidamente." },
-    { en: "I prepare my bag.", es: "Preparo mi mochila." },
+    { en: "I don’t forget my uniform.", es: "No olvido mi uniforme." },
     { en: "Do you make your bed?", es: "Haces la cama?" },
-    { en: "I do not make the bed.", es: "No hago la cama." },
-    { en: "I help in the kitchen.", es: "Ayudo en la cocina." },
-    { en: "Do you help at home?", es: "Ayudas en casa?" },
-    { en: "I feed the dog.", es: "Doy de comer al perro." },
-    { en: "I talk with my mum.", es: "Hablo con mi madre." },
-    { en: "Do you talk with your dad?", es: "Hablas con tu padre?" },
-    { en: "I check my phone.", es: "Reviso el móvil." }
+    { en: "I get dressed quickly.", es: "Me visto rápidamente." },
+    { en: "I prepare my school bag.", es: "Preparo mi mochila." }
   ],
   3: [
-    { en: "I eat breakfast at home.", es: "Desayuno en casa." },
-    { en: "I drink tea and eat toast.", es: "Bebo té y como tostadas." },
-    { en: "Do you eat cereal?", es: "Comes cereales?" },
-    { en: "I do not drink coffee in the morning.", es: "No bebo café por la mañana." },
     { en: "What do you eat for breakfast?", es: "Qué desayunas?" },
-    { en: "I prefer fruit.", es: "Prefiero la fruta." },
-    { en: "I sometimes skip breakfast.", es: "A veces me salto el desayuno." },
+    { en: "I eat cereal and fruit.", es: "Desayuno cereales y fruta." },
+    { en: "Do you drink tea?", es: "Bebes té?" },
+    { en: "I drink tea; I don’t drink coffee.", es: "Bebo té; no bebo café." },
     { en: "Do you eat with your family?", es: "Desayunas con tu familia?" },
-    { en: "I prepare a smoothie.", es: "Preparo un batido." },
+    { en: "Sometimes I skip breakfast.", es: "A veces me salto el desayuno." },
     { en: "I set the table.", es: "Pongo la mesa." },
-    { en: "I do not have much time.", es: "No tengo mucho tiempo." },
     { en: "Do you wash the dishes?", es: "Lavas los platos?" },
     { en: "I wash the dishes quickly.", es: "Lavo los platos rápidamente." },
-    { en: "I clean the kitchen a little.", es: "Limpio un poco la cocina." },
-    { en: "I leave the house at eight.", es: "Salgo de casa a las ocho." },
-    { en: "Do you leave earlier?", es: "Sales más temprano?" }
+    { en: "I leave the house at eight.", es: "Salgo de casa a las ocho." }
   ],
   4: [
-    { en: "I go to school by bus.", es: "Voy al colegio en autobús." },
-    { en: "I walk when it is sunny.", es: "Camino cuando hace sol." },
-    { en: "Do you go by car?", es: "Vas en coche?" },
-    { en: "I do not go by train.", es: "No voy en tren." },
     { en: "How do you go to school?", es: "Cómo vas al colegio?" },
-    { en: "The journey is short.", es: "El viaje es corto." },
-    { en: "I listen to music on the way.", es: "Escucho música por el camino." },
+    { en: "I go to school by bus.", es: "Voy al colegio en autobús." },
+    { en: "Do you go by car?", es: "Vas en coche?" },
+    { en: "I don’t go by train.", es: "No voy en tren." },
+    { en: "I walk when it’s sunny.", es: "Camino cuando hace sol." },
+    { en: "Do you listen to music on the way?", es: "Escuchas música por el camino?" },
     { en: "I chat with friends on the bus.", es: "Charlo con amigos en el autobús." },
-    { en: "Do you use your phone?", es: "Usas el móvil?" },
-    { en: "I do not use it much.", es: "No lo uso mucho." },
-    { en: "I arrive at school at half eight.", es: "Llego al colegio a las ocho y media." },
-    { en: "Do you arrive late sometimes?", es: "Llegas tarde a veces?" },
-    { en: "I wait at the bus stop.", es: "Espero en la parada de autobús." },
-    { en: "I cross the street carefully.", es: "Cruzo la calle con cuidado." },
-    { en: "I meet my best friend at the gate.", es: "Quedo con mi mejor amigo en la puerta." },
-    { en: "Do you carry many books?", es: "Llevas muchos libros?" }
+    { en: "Do you use your phone on the way?", es: "Usas el móvil por el camino?" },
+    { en: "I arrive at half eight.", es: "Llego a las ocho y media." },
+    { en: "Sometimes I arrive late.", es: "A veces llego tarde." }
   ],
   5: [
-    { en: "I start classes at nine.", es: "Empiezo las clases a las nueve." },
     { en: "Do you study Spanish?", es: "Estudias español?" },
-    { en: "I like Spanish a lot.", es: "Me gusta mucho el español." },
-    { en: "I do not like Maths.", es: "No me gustan las matemáticas." },
+    { en: "I study six subjects.", es: "Estudio seis asignaturas." },
     { en: "Which subject do you prefer?", es: "Qué asignatura prefieres?" },
-    { en: "I have six classes every day.", es: "Tengo seis clases cada día." },
-    { en: "I take notes in a notebook.", es: "Tomo apuntes en un cuaderno." },
+    { en: "I prefer English.", es: "Prefiero inglés." },
+    { en: "I don’t like Maths.", es: "No me gustan las matemáticas." },
     { en: "Do you pay attention in class?", es: "Prestas atención en clase?" },
-    { en: "I ask questions when I do not understand.", es: "Hago preguntas cuando no entiendo." },
-    { en: "I participate in class.", es: "Participo en clase." },
-    { en: "I do not forget my homework.", es: "No olvido los deberes." },
+    { en: "I take notes in a notebook.", es: "Tomo apuntes en un cuaderno." },
+    { en: "I ask questions when I don’t understand.", es: "Hago preguntas cuando no entiendo." },
     { en: "Do you use a laptop at school?", es: "Usas un portátil en el colegio?" },
-    { en: "I work well in a team.", es: "Trabajo bien en equipo." },
-    { en: "I respect my teachers.", es: "Respeto a mis profesores." },
-    { en: "Do you enjoy learning?", es: "Disfrutas aprender?" },
-    { en: "I prefer practical activities.", es: "Prefiero actividades prácticas." }
+    { en: "I work well in a team.", es: "Trabajo bien en equipo." }
   ],
   6: [
-    { en: "I eat lunch at one o'clock.", es: "Como a la una." },
     { en: "Do you eat in the canteen?", es: "Comes en el comedor?" },
     { en: "I bring a packed lunch.", es: "Llevo un almuerzo de casa." },
-    { en: "I do not buy food at school.", es: "No compro comida en el colegio." },
-    { en: "I drink water with lunch.", es: "Bebo agua con la comida." },
+    { en: "I don’t buy food at school.", es: "No compro comida en el colegio." },
     { en: "Do you eat fruit every day?", es: "Comes fruta todos los días?" },
-    { en: "I share snacks with friends.", es: "Comparto meriendas con amigos." },
-    { en: "I prefer a sandwich.", es: "Prefiero un bocadillo." },
+    { en: "I drink water with lunch.", es: "Bebo agua con la comida." },
     { en: "I avoid junk food.", es: "Evito la comida basura." },
-    { en: "Do you have allergies?", es: "Tienes alergias?" },
-    { en: "I eat vegetarian food sometimes.", es: "Como comida vegetariana a veces." },
-    { en: "I do not drink fizzy drinks.", es: "No bebo refrescos." },
-    { en: "Do you finish lunch quickly?", es: "Terminas de comer rápido?" },
-    { en: "I tidy the table after eating.", es: "Recojo la mesa después de comer." },
-    { en: "I wash my hands before eating.", es: "Me lavo las manos antes de comer." },
-    { en: "Do you queue for the canteen?", es: "Haces cola para el comedor?" }
+    { en: "Do you share snacks with friends?", es: "Compartes meriendas con amigos?" },
+    { en: "I prefer a sandwich.", es: "Prefiero un bocadillo." },
+    { en: "Do you have any allergies?", es: "Tienes alguna alergia?" },
+    { en: "I finish lunch quickly.", es: "Termino de comer rápido." }
   ],
   7: [
     { en: "I do my homework in the evening.", es: "Hago los deberes por la tarde." },
     { en: "Do you study every day?", es: "Estudias todos los días?" },
     { en: "I study for two hours.", es: "Estudio durante dos horas." },
-    { en: "I do not procrastinate.", es: "No procrastino." },
+    { en: "I don’t procrastinate.", es: "No procrastino." },
     { en: "I revise for tests.", es: "Repaso para los exámenes." },
     { en: "Do you use online resources?", es: "Usas recursos en línea?" },
     { en: "I ask for help when I need it.", es: "Pido ayuda cuando la necesito." },
-    { en: "I do not copy homework.", es: "No copio los deberes." },
-    { en: "I prepare my bag for tomorrow.", es: "Preparo mi mochila para mañana." },
+    { en: "I don’t copy homework.", es: "No copio los deberes." },
     { en: "Do you plan your week?", es: "Planificas tu semana?" },
-    { en: "I organise my notes.", es: "Organizo mis apuntes." },
-    { en: "I take regular breaks.", es: "Hago descansos regulares." },
-    { en: "Do you study with friends?", es: "Estudias con amigos?" },
-    { en: "I improve little by little.", es: "Mejoro poco a poco." },
-    { en: "I do not use my phone while studying.", es: "No uso el móvil mientras estudio." },
-    { en: "Do you highlight key points?", es: "Subrayas las ideas clave?" }
+    { en: "I take regular breaks.", es: "Hago descansos regulares." }
   ],
   8: [
     { en: "I help at home after school.", es: "Ayudo en casa después del colegio." },
-    { en: "I set the table for dinner.", es: "Pongo la mesa para la cena." },
-    { en: "Do you cook sometimes?", es: "Cocinas a veces?" },
-    { en: "I do not cook very well.", es: "No cocino muy bien." },
+    { en: "Do you set the table for dinner?", es: "Pones la mesa para la cena?" },
     { en: "I tidy my room on weekdays.", es: "Ordeno mi habitación entre semana." },
     { en: "Do you take out the rubbish?", es: "Sacas la basura?" },
     { en: "I look after my little brother.", es: "Cuido de mi hermano pequeño." },
-    { en: "I do not argue with my parents.", es: "No discuto con mis padres." },
-    { en: "I play with my dog in the garden.", es: "Juego con mi perro en el jardín." },
+    { en: "I don’t argue with my parents.", es: "No discuto con mis padres." },
     { en: "Do you water the plants?", es: "Riegas las plantas?" },
     { en: "I clean the bathroom at the weekend.", es: "Limpio el baño el fin de semana." },
-    { en: "I sweep the floor.", es: "Barro el suelo." },
     { en: "Do you iron your clothes?", es: "Planchas la ropa?" },
-    { en: "I fold my clothes.", es: "Doblo mi ropa." },
-    { en: "I do not break house rules.", es: "No rompo las reglas de la casa." },
-    { en: "Do you walk the dog every day?", es: "Paseas al perro todos los días?" }
+    { en: "I fold my clothes.", es: "Doblo mi ropa." }
   ],
   9: [
     { en: "I relax after dinner.", es: "Me relajo después de cenar." },
-    { en: "I watch a series with my family.", es: "Veo una serie con mi familia." },
+    { en: "Do you watch a series with your family?", es: "Ves una serie con tu familia?" },
+    { en: "I don’t watch TV for many hours.", es: "No veo la tele muchas horas." },
     { en: "Do you read before bed?", es: "Lees antes de acostarte?" },
-    { en: "I do not watch TV for many hours.", es: "No veo la tele muchas horas." },
     { en: "I chat with friends online.", es: "Charlo con amigos en línea." },
     { en: "Do you play video games at night?", es: "Juegas a los videojuegos por la noche?" },
     { en: "I listen to music to relax.", es: "Escucho música para relajarme." },
-    { en: "I do not go out on school nights.", es: "No salgo entre semana." },
-    { en: "I prepare my uniform.", es: "Preparo mi uniforme." },
-    { en: "Do you check your timetable?", es: "Revisas tu horario?" },
-    { en: "I pack my lunch for tomorrow.", es: "Preparo el almuerzo para mañana." },
-    { en: "I speak with my parents about my day.", es: "Hablo con mis padres sobre mi día." },
+    { en: "I don’t go out on school nights.", es: "No salgo entre semana." },
     { en: "Do you switch off your phone?", es: "Apagas el móvil?" },
-    { en: "I do not use screens after ten.", es: "No uso pantallas después de las diez." },
-    { en: "I brush my teeth again.", es: "Me cepillo los dientes otra vez." },
-    { en: "Do you set an alarm?", es: "Pones una alarma?" }
+    { en: "I prepare my uniform.", es: "Preparo mi uniforme." }
   ],
   10: [
+    { en: "Do you set an alarm?", es: "Pones una alarma?" },
     { en: "I go to bed at half ten.", es: "Me acuesto a las diez y media." },
     { en: "Do you fall asleep quickly?", es: "Te duermes rápido?" },
-    { en: "I do not sleep badly.", es: "No duermo mal." },
     { en: "I need eight hours of sleep.", es: "Necesito ocho horas de sueño." },
     { en: "Do you follow a healthy routine?", es: "Sigues una rutina saludable?" },
     { en: "I balance school and hobbies.", es: "Equilibro el colegio y los pasatiempos." },
     { en: "I take care of my mental health.", es: "Cuido mi salud mental." },
     { en: "Do you manage your time well?", es: "Organizas bien tu tiempo?" },
     { en: "I try to improve every day.", es: "Intento mejorar cada día." },
-    { en: "I do not waste time at night.", es: "No pierdo el tiempo por la noche." },
-    { en: "Do you prepare goals for tomorrow?", es: "Preparas objetivos para mañana?" },
-    { en: "I am happy with my routine.", es: "Estoy contento con mi rutina." },
-    { en: "Do you feel ready for school?", es: "Te sientes listo para el colegio?" },
-    { en: "I thank my parents for their help.", es: "Agradezco a mis padres su ayuda." },
-    { en: "I do not forget my responsibilities.", es: "No olvido mis responsabilidades." },
-    { en: "Do you finish the day proud of yourself?", es: "Terminas el día orgulloso de ti mismo?" }
+    { en: "I don’t waste time at night.", es: "No pierdo el tiempo por la noche." }
   ]
 };
 
+const deepCopy = obj => JSON.parse(JSON.stringify(obj));
+const DATASETS = { Present: PRESENT, Past: deepCopy(PRESENT), Future: deepCopy(PRESENT) };
+ 
   // ===================== Global cheats =====================
   const clampCheats = n => Math.max(0, Math.min(GLOBAL_CHEATS_MAX, n|0));
   function getGlobalCheats(){
@@ -211,18 +158,25 @@
   }
   function setGlobalCheats(n){ localStorage.setItem(GLOBAL_CHEATS_KEY, String(clampCheats(n))); }
 
-  // ===================== Compare =====================
-  const norm = s => (s||"").trim();
-  const endsWithQM = s => norm(s).endsWith("?");
-  function core(s){
-    let t = norm(s);
-    if (t.startsWith("¿")) t = t.slice(1);
-    if (t.endsWith("?"))  t = t.slice(0,-1);
-    t = t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    t = t.replace(/ñ/gi, "n");
-    return t.replace(/\s+/g," ").toLowerCase();
-  }
-  function cmpAnswer(user, expected){ if (!endsWithQM(user)) return false; return core(user) === core(expected); }
+ // ===================== Compare =====================
+const norm = s => (s || "").trim();
+const endsWithQM = s => norm(s).endsWith("?");
+
+// Accents REQUIRED; ñ ≡ n; case/extra spaces ignored; ignore a leading ¿ if typed.
+function coreKeepAccents(s) {
+  let t = norm(s);
+  if (t.startsWith("¿")) t = t.slice(1);
+  if (t.endsWith("?"))  t = t.slice(0, -1);
+  t = t.replace(/ñ/gi, "n");
+  return t.replace(/\s+/g, " ").toLowerCase();
+}
+
+// Require '?' only if the EXPECTED Spanish is a question.
+function cmpAnswer(user, expected) {
+  const expIsQ = endsWithQM(expected);
+  if (expIsQ && !endsWithQM(user)) return false;
+  return coreKeepAccents(user) === coreKeepAccents(expected);
+}
 
   // ===================== Best/unlocks (per tense) =====================
   const STORAGE_PREFIX = "tqplus:v3";
