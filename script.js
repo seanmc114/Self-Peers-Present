@@ -158,25 +158,36 @@ const DATASETS = { Present: PRESENT, Past: deepCopy(PRESENT), Future: deepCopy(P
   }
   function setGlobalCheats(n){ localStorage.setItem(GLOBAL_CHEATS_KEY, String(clampCheats(n))); }
 
- // ===================== Compare =====================
+// ===================== Compare =====================
 const norm = s => (s || "").trim();
 const endsWithQM = s => norm(s).endsWith("?");
 
-// Accents REQUIRED; ñ ≡ n; case/extra spaces ignored; ignore a leading ¿ if typed.
+// Accents REQUIRED; ñ ≡ n; case ignored; ignore punctuation like final . or leading ¿
 function coreKeepAccents(s) {
   let t = norm(s);
+
+  // Remove leading inverted question mark if user adds it
   if (t.startsWith("¿")) t = t.slice(1);
-  if (t.endsWith("?"))  t = t.slice(0, -1);
+
+  // Remove ONLY a final ? or . if present
+  if (t.endsWith("?") || t.endsWith(".")) {
+    t = t.slice(0, -1);
+  }
+
+  // Treat ñ as n so both are accepted
   t = t.replace(/ñ/gi, "n");
+
+  // Lowercase + collapse spaces
   return t.replace(/\s+/g, " ").toLowerCase();
 }
 
-// Require '?' only if the EXPECTED Spanish is a question.
+// Require ? only if the expected Spanish is a question
 function cmpAnswer(user, expected) {
   const expIsQ = endsWithQM(expected);
   if (expIsQ && !endsWithQM(user)) return false;
   return coreKeepAccents(user) === coreKeepAccents(expected);
 }
+
 
   // ===================== Best/unlocks (per tense) =====================
   const STORAGE_PREFIX = "tqplus:v3";
