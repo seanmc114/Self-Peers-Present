@@ -201,15 +201,25 @@ function cmpAnswer(user, expected) {
   function speak(text, lang="es-ES"){ try{ if(!("speechSynthesis" in window)) return; const u=new SpeechSynthesisUtterance(text); u.lang=lang; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);}catch{} }
   let rec=null, recActive=false;
   function ensureRecognizer(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return null; if(!rec){ rec=new SR(); rec.lang="es-ES"; rec.interimResults=false; rec.maxAlternatives=1; } return rec; }
-  function startDictationFor(input,onStatus){
-    const r=ensureRecognizer(); if(!r){onStatus&&onStatus(false);return;}
-    if(recActive){try{r.stop();}catch{} recActive=false; onStatus&&onStatus(false);}
-    try{
-      r.onresult=e=>{ const txt=(e.results[0]&&e.results[0][0]&&e.results[0][0].transcript)||""; const v=txt.trim(); input.value = v.endsWith("?")?v:(v+"?"); input.dispatchEvent(new Event("input",{bubbles:true})); };
-      r.onend=()=>{recActive=false; onStatus&&onStatus(false);};
-      recActive=true; onStatus&&onStatus(true); r.start();
-    }catch{ onStatus&&onStatus(false); }
-  }
+  function startDictationFor(input, onStatus, requireQM = false){
+  const r = ensureRecognizer(); if(!r){ onStatus&&onStatus(false); return; }
+  if(recActive){ try{ r.stop(); }catch{} recActive=false; onStatus&&onStatus(false); }
+  try{
+    r.onresult = e => {
+      const txt = (e.results[0] && e.results[0][0] && e.results[0][0].transcript) || "";
+      let v = txt.trim();
+      // Only add ? if this item is actually a question
+      if (requireQM && !v.endsWith("?")) v += "?";
+      // If not a question and the recognizer adds punctuation, gently trim a trailing ?
+      if (!requireQM && v.endsWith("?")) v = v.slice(0,-1);
+      input.value = v;
+      input.dispatchEvent(new Event("input", { bubbles:true }));
+    };
+    r.onend = ()=>{ recActive=false; onStatus&&onStatus(false); };
+    recActive=true; onStatus&&onStatus(true); r.start();
+  }catch{ onStatus&&onStatus(false); }
+}
+
   function miniBtn(text,title){ const b=document.createElement("button"); b.type="button"; b.textContent=text; b.title=title; b.setAttribute("aria-label",title);
     Object.assign(b.style,{fontSize:"0.85rem",lineHeight:"1",padding:"4px 8px",marginLeft:"6px",border:"1px solid #ddd",borderRadius:"8px",background:"#fff",cursor:"pointer",verticalAlign:"middle"}); return b; }
 
@@ -324,33 +334,128 @@ function cmpAnswer(user, expected) {
     renderQuiz(); startTimer();
   }
 
-  function renderQuiz(){
-    const qwrap=$("#questions"); if(!qwrap) return; qwrap.innerHTML="";
-    quiz.forEach((q,i)=>{
-      const row=document.createElement("div"); row.className="q";
+ // ===================== REPLACE FROM HERE (startDictationFor + renderQuiz) =====================
 
-      const p=document.createElement("div"); p.className="prompt"; p.textContent=`${i+1}. ${q.prompt}`;
-      const controls=document.createElement("span");
-      Object.assign(controls.style,{display:"inline-block",marginLeft:"6px",verticalAlign:"middle"});
+function startDictationFor(input, onStatus, requireQM = false){
+  const r = ensureRecognizer(); 
+  if (!r){ onStatus && onStatus(false); return; }
 
-      const enBtn=miniBtn("🔈 EN","Read English prompt"); enBtn.onclick=()=>speak(q.prompt,"en-GB");
-      const esBtn=miniBtn("🔊 ES","Read Spanish target (uses 1 this attempt)"); esBtn.setAttribute("data-role","es-tts");
-      esBtn.onclick=()=>{ if (attemptRemaining()<=0){ updateESButtonsState(qwrap); return; } speak(q.answer,"es-ES"); cheatsUsedThisRound+=1; updateESButtonsState(qwrap); };
-      const micBtn=miniBtn("🎤","Dictate into this answer"); micBtn.onclick=()=>{ startDictationFor(input,(on)=>{ micBtn.style.borderColor=on?"#f39c12":"#ddd"; micBtn.style.boxShadow=on?"0 0 0 2px rgba(243,156,18,0.25)":"none"; }); };
-
-      controls.appendChild(enBtn); controls.appendChild(esBtn); controls.appendChild(micBtn); p.appendChild(controls);
-
-      const input=document.createElement("input"); input.type="text"; input.placeholder="Type the Spanish here (must end with ?)";
-      input.oninput=e=>{ quiz[i].user=e.target.value; };
-      input.addEventListener("keydown",(e)=>{ if(e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey){ if(e.code==="KeyR"){e.preventDefault();enBtn.click();} else if(e.code==="KeyS"){e.preventDefault();esBtn.click();} else if(e.code==="KeyM"){e.preventDefault();micBtn.click();} }});
-
-      row.appendChild(p); row.appendChild(input); qwrap.appendChild(row);
-    });
-    updateESButtonsState(qwrap);
-
-    const submit=$("#submit"); if(submit){ submit.disabled=false; submit.textContent="Finish & Check"; submit.onclick=finishAndCheck; }
-    const back=$("#back-button"); if(back){ back.style.display="inline-block"; back.onclick=backToLevels; }
+  if (recActive){ 
+    try { r.stop(); } catch{} 
+    recActive = false; 
+    onStatus && onStatus(false); 
   }
+
+  try{
+    r.onresult = e => {
+      const txt = (e.results[0] && e.results[0][0] && e.results[0][0].transcript) || "";
+      let v = txt.trim();
+
+      // Only enforce ? for question items
+      if (requireQM && !v.endsWith("?")) v += "?";
+      if (!requireQM && v.endsWith("?")) v = v.slice(0, -1);
+
+      input.value = v;
+      input.dispatchEvent(new Event("input", { bubbles:true }));
+    };
+    r.onend = () => { recActive = false; onStatus && onStatus(false); };
+
+    recActive = true; 
+    onStatus && onStatus(true); 
+    r.start();
+  } catch {
+    onStatus && onStatus(false);
+  }
+}
+
+function renderQuiz(){
+  const qwrap = $("#questions"); 
+  if (!qwrap) return; 
+  qwrap.innerHTML = "";
+
+  quiz.forEach((q, i) => {
+    const row = document.createElement("div"); 
+    row.className = "q";
+
+    const p = document.createElement("div"); 
+    p.className = "prompt"; 
+    p.textContent = `${i+1}. ${q.prompt}`;
+
+    const controls = document.createElement("span");
+    Object.assign(controls.style, { display:"inline-block", marginLeft:"6px", verticalAlign:"middle" });
+
+    const enBtn = miniBtn("🔈 EN", "Read English prompt");
+    enBtn.onclick = () => speak(q.prompt, "en-GB");
+
+    const esBtn = miniBtn("🔊 ES", "Read Spanish target (uses 1 this attempt)");
+    esBtn.setAttribute("data-role","es-tts");
+    esBtn.onclick = () => { 
+      if (attemptRemaining() <= 0){ 
+        updateESButtonsState(qwrap); 
+        return; 
+      } 
+      speak(q.answer, "es-ES"); 
+      cheatsUsedThisRound += 1; 
+      updateESButtonsState(qwrap); 
+    };
+
+    // Is this item a question? (expected Spanish ends with ?)
+    const requiresQM = /\?\s*$/.test((q.answer || "").trim());
+
+    const micBtn = miniBtn("🎤", "Dictate into this answer");
+    micBtn.onclick = () => { 
+      startDictationFor(
+        input, 
+        (on) => { 
+          micBtn.style.borderColor = on ? "#f39c12" : "#ddd"; 
+          micBtn.style.boxShadow   = on ? "0 0 0 2px rgba(243,156,18,0.25)" : "none"; 
+        }, 
+        requiresQM
+      );
+    };
+
+    controls.appendChild(enBtn); 
+    controls.appendChild(esBtn); 
+    controls.appendChild(micBtn); 
+    p.appendChild(controls);
+
+    // Input hint shows "(end with ?)" ONLY for real questions
+    const input = document.createElement("input"); 
+    input.type = "text"; 
+    input.placeholder = requiresQM ? "Type the Spanish here (end with ?)" : "Type the Spanish here";
+    input.oninput = e => { quiz[i].user = e.target.value; };
+
+    // Hotkeys: Alt+R EN, Alt+S ES, Alt+M Mic
+    input.addEventListener("keydown", (e) => { 
+      if (e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey){ 
+        if (e.code === "KeyR"){ e.preventDefault(); enBtn.click(); } 
+        else if (e.code === "KeyS"){ e.preventDefault(); esBtn.click(); } 
+        else if (e.code === "KeyM"){ e.preventDefault(); micBtn.click(); } 
+      }
+    });
+
+    row.appendChild(p); 
+    row.appendChild(input); 
+    qwrap.appendChild(row);
+  });
+
+  updateESButtonsState(qwrap);
+
+  const submit = $("#submit"); 
+  if (submit){ 
+    submit.disabled = false; 
+    submit.textContent = "Finish & Check"; 
+    submit.onclick = finishAndCheck; 
+  }
+
+  const back = $("#back-button"); 
+  if (back){ 
+    back.style.display = "inline-block"; 
+    back.onclick = backToLevels; 
+  }
+}
+
+// ===================== REPLACE UNTIL HERE (startDictationFor + renderQuiz) =====================
 
   function finishAndCheck(){
     if (submitted) return; submitted=true;
