@@ -2,84 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>UNION — Spanish Practice</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="style.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TURBO: 
+   LC: Self, Peers, Present </title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="topbar">
-    <h1>UNION — Spanish Practice</h1>
-    <div class="controls">
-      <label>
-        Direction:
-        <select id="direction">
-          <option value="en-es">English → Spanish</option>
-          <option value="es-en">Spanish → English</option>
-        </select>
-      </label>
-      <label>
-        Tense:
-        <select id="tense">
-          <option value="present">Present</option>
-          <!-- You can add "past" / "future" sets later; logic already supports it -->
-        </select>
-      </label>
-      <button id="resetProgress" title="Reset unlocks and best times">Reset Progress</button>
+  <div class="container">
+    <h1><span class="turbo">TURBO</span>:LC: Self, Peers, Present</h1>
+
+    <div id="tense-buttons" role="toolbar" aria-label="Tense selection">
+      <button class="tense-button active" data-tense="Present">Present</button>
+      <button class="tense-button" data-tense="Past">Past</button>
+      <button class="tense-button" data-tense="Future">Future</button>
     </div>
-  </header>
 
-  <main class="wrap">
-    <section>
-      <h2>Levels</h2>
-      <div class="levels" id="levels">
-        <!-- Levels L1..L9 (Final) -->
-        <button class="level" data-level="L1">Level 1</button>
-        <button class="level" data-level="L2">Level 2</button>
-        <button class="level" data-level="L3">Level 3</button>
-        <button class="level" data-level="L4">Level 4</button>
-        <button class="level" data-level="L5">Level 5</button>
-        <button class="level" data-level="L6">Level 6</button>
-        <button class="level" data-level="L7">Level 7</button>
-        <button class="level" data-level="L8">Level 8</button>
-        <button class="level" data-level="L9">Final</button>
+    <!-- Level Buttons -->
+    <div id="level-list" class="level-list" aria-live="polite"></div>
+
+    <!-- Game Section -->
+    <div id="game" style="display:none;">
+      <div id="timer">Time: 0s</div>
+      <div id="questions"></div>
+      <div class="controls">
+        <button id="submit">Finish & Check</button>
+        <button id="back-button" style="display:none;">Back to Levels</button>
       </div>
-      <p class="hint">Locked levels appear faded. Beat the time threshold on the previous level to unlock the next.</p>
-    </section>
-
-    <section id="play" class="card hidden">
-      <div class="row">
-        <div>
-          <h2 id="playTitle">Level</h2>
-          <div id="timer" aria-live="polite">00:00</div>
-        </div>
-        <div class="actions">
-          <button id="speakBtn" title="Speak prompt">🔊</button>
-        </div>
-      </div>
-
-      <div id="questions" class="qwrap"></div>
-
-      <div class="row">
-        <button id="submitBtn" class="primary">Submit</button>
-        <button id="cancelBtn">Cancel</button>
-      </div>
-    </section>
-
-    <section id="results" class="card hidden">
-      <h2>Results</h2>
-      <p id="scoreLine"></p>
-      <div id="feedback"></div>
-      <div class="row">
-        <button id="backToMenu" class="secondary">Back to Menu</button>
-        <button id="tryAgain">Try Again</button>
-      </div>
-    </section>
-  </main>
-
-  <footer class="foot">
-    <small>Accents required. Case is ignored. <code>ñ</code> allowed as keyboard <code>n</code> fallback.</small>
-  </footer>
-
+      <div id="results"></div>
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 </html>
