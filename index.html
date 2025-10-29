@@ -3,34 +3,46 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TURBO: 
-   LC: Self, Peers, Present </title>
+  <title>TURBO — LC: Self, Peers, Present</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1><span class="turbo">TURBO</span>:LC: Self, Peers, Present</h1>
+    <h1><span class="turbo">TURBO</span>: LC — Self, Peers (Present)</h1>
 
+    <!-- Tense (kept minimal; present active) -->
     <div id="tense-buttons" role="toolbar" aria-label="Tense selection">
       <button class="tense-button active" data-tense="Present">Present</button>
-      <button class="tense-button" data-tense="Past">Past</button>
-      <button class="tense-button" data-tense="Future">Future</button>
     </div>
 
-    <!-- Level Buttons -->
+    <!-- Levels -->
     <div id="level-list" class="level-list" aria-live="polite"></div>
 
-    <!-- Game Section -->
-    <div id="game" style="display:none;">
-      <div id="timer">Time: 0s</div>
-      <div id="questions"></div>
-      <div class="controls">
-        <button id="submit">Finish & Check</button>
-        <button id="back-button" style="display:none;">Back to Levels</button>
+    <!-- Game -->
+    <div id="game" class="game" style="display:none;">
+      <div class="status-bar">
+        <div id="timer" class="timer" aria-live="polite">00:00</div>
+
+        <div class="tts">
+          <label class="toggle">
+            <input type="checkbox" id="read-toggle" />
+            <span>Read (Spanish)</span>
+          </label>
+          <button id="speak-btn" title="Speak prompt" disabled>🔊</button>
+        </div>
       </div>
-      <div id="results"></div>
+
+      <div id="questions" class="questions"></div>
+
+      <div class="actions">
+        <button id="submit" class="submit">Finish & Check</button>
+        <button id="back-button" class="cancel" style="display:none;">Back to Levels</button>
+      </div>
+
+      <div id="results" class="results"></div>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
