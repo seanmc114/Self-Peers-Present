@@ -1,436 +1,321 @@
+// Turbo: Q+ Edition — Perfect Round Celebration (confetti + banner + shake)
+// Keeps all previous functionality from your last version: global tokens (cap 7, commit-on-finish),
+// unlock ramp 200→…→40, Try Again, TTS/voice, identical UI/brand.
+//
+// Drop-in replacement for script.js
+
 (() => {
   const $  = sel => document.querySelector(sel);
   const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-  // ------------------ CONFIG ------------------
+  // ===================== CONFIG =====================
   const QUESTIONS_PER_ROUND = 10;
   const PENALTY_PER_WRONG   = 30;
-  // Unlock thresholds for NEXT level based on previous best:
-  // L2 after L1 ≤ 90, L3 after L2 ≤ 85, L4 ≤ 80, L5 ≤ 75, L6 ≤ 70, L7 ≤ 65, L8 ≤ 60, L9 ≤ 50.
-  const UNLOCK_RULES = { L2:90, L3:85, L4:80, L5:75, L6:70, L7:65, L8:60, L9:50 };
+  const BASE_THRESH = { 1:200, 2:180, 3:160, 4:140, 5:120, 6:100, 7:80, 8:60, 9:40 };
 
-  // ------------------ DATA (Present) ------------------
-  // Keep content modest here; you can swap in your full bank.
-  const BANK = {
-    present: {
-      L1: [
-        { en:"I speak", es:["hablo","yo hablo"] },
-        { en:"You speak (tú)", es:["hablas"] },
-        { en:"He speaks", es:["habla","él habla"] },
-        { en:"We speak", es:["hablamos","nosotros hablamos"] },
-        { en:"They speak", es:["hablan","ellos hablan"] },
-        { en:"Do you speak?", es:["¿hablas?","¿hablas tú?"] },
-        { en:"I eat", es:["como","yo como"] },
-        { en:"Do they eat?", es:["¿comen?","¿comen ellos?"] },
-        { en:"We live", es:["vivimos","nosotros vivimos"] },
-        { en:"She lives", es:["vive","ella vive"] },
-        { en:"Do we live?", es:["¿vivimos?"] }
-      ],
-      L2: [
-        { en:"I have", es:["tengo","yo tengo"] },
-        { en:"Do you have?", es:["¿tienes?","¿tienes tú?"] },
-        { en:"He has", es:["tiene","él tiene"] },
-        { en:"They have", es:["tienen","ellos tienen"] },
-        { en:"We have", es:["tenemos","nosotros tenemos"] },
-        { en:"She doesn’t have", es:["no tiene","ella no tiene"] },
-        { en:"Do we have?", es:["¿tenemos?"] },
-        { en:"I need", es:["necesito","yo necesito"] },
-        { en:"Do they need?", es:["¿necesitan?"] },
-        { en:"I go", es:["voy","yo voy"] },
-        { en:"Do you go?", es:["¿vas?","¿vas tú?"] },
-        { en:"We go", es:["vamos","nosotros vamos"] }
-      ],
-      L3: [
-        { en:"I want", es:["quiero","yo quiero"] },
-        { en:"Do you want?", es:["¿quieres?"] },
-        { en:"We want", es:["queremos"] },
-        { en:"She wants", es:["quiere","ella quiere"] },
-        { en:"They want", es:["quieren","ellos quieren"] },
-        { en:"I can", es:["puedo","yo puedo"] },
-        { en:"Can you?", es:["¿puedes?"] },
-        { en:"He can", es:["puede"] },
-        { en:"We can", es:["podemos"] },
-        { en:"They can", es:["pueden"] },
-        { en:"Do we want?", es:["¿queremos?"] },
-        { en:"Do they want?", es:["¿quieren?"] }
-      ],
-      L4: [
-        { en:"I like", es:["me gusta"] },
-        { en:"Do you like?", es:["¿te gusta?"] },
-        { en:"We like", es:["nos gusta"] },
-        { en:"They like", es:["les gusta"] },
-        { en:"He likes chocolate", es:["le gusta el chocolate"] },
-        { en:"Do they like music?", es:["¿les gusta la música?"] },
-        { en:"I live in Spain", es:["vivo en españa","yo vivo en españa"] },
-        { en:"Do you live here?", es:["¿vives aquí?"] },
-        { en:"We study", es:["estudiamos"] },
-        { en:"She studies", es:["estudia"] }
-      ],
-      L5: [
-        { en:"I’m from Ireland", es:["soy de irlanda","yo soy de irlanda"] },
-        { en:"Are you from Spain?", es:["¿eres de españa?"] },
-        { en:"We are teachers", es:["somos profesores"] },
-        { en:"They aren’t students", es:["no son estudiantes"] },
-        { en:"He is tall", es:["es alto","él es alto"] },
-        { en:"Is she tall?", es:["¿es alta?","¿es ella alta?"] },
-        { en:"I am happy", es:["estoy feliz","estoy contento","estoy contenta"] },
-        { en:"Are we ready?", es:["¿estamos listos?"] },
-        { en:"They are at home", es:["están en casa","ellos están en casa"] }
-      ],
-      L6: [
-        { en:"I’m hungry", es:["tengo hambre"] },
-        { en:"I’m thirsty", es:["tengo sed"] },
-        { en:"Do you have time?", es:["¿tienes tiempo?"] },
-        { en:"We are tired", es:["estamos cansados"] },
-        { en:"They are busy", es:["están ocupados"] },
-        { en:"She is sick", es:["está enferma","ella está enferma"] },
-        { en:"Is he at school?", es:["¿está en la escuela?","¿está él en la escuela?"] },
-        { en:"Can we start?", es:["¿podemos empezar?"] },
-        { en:"We start now", es:["empezamos ahora"] }
-      ],
-      L7: [
-        { en:"I play football", es:["juego al fútbol","yo juego al fútbol"] },
-        { en:"Do you play?", es:["¿juegas?"] },
-        { en:"We play", es:["jugamos"] },
-        { en:"They play", es:["juegan"] },
-        { en:"I read books", es:["leo libros","yo leo libros"] },
-        { en:"Do they read?", es:["¿leen?"] },
-        { en:"He reads", es:["lee"] },
-        { en:"We read", es:["leemos"] },
-        { en:"I write", es:["escribo","yo escribo"] },
-        { en:"Do you write?", es:["¿escribes?"] }
-      ],
-      L8: [
-        { en:"I’m going to study", es:["voy a estudiar","yo voy a estudiar"] },
-        { en:"Are you going to read?", es:["¿vas a leer?"] },
-        { en:"We are going to travel", es:["vamos a viajar"] },
-        { en:"They are going to eat", es:["van a comer"] },
-        { en:"She is going to write", es:["va a escribir","ella va a escribir"] },
-        { en:"Is he going to play?", es:["¿va a jugar?"] },
-        { en:"I’m going to speak", es:["voy a hablar"] }
-      ],
-        L9: [
-        { en:"Why are you here?", es:["¿por qué estás aquí?"] },
-        { en:"Where do you live?", es:["¿dónde vives?"] },
-        { en:"When do we start?", es:["¿cuándo empezamos?"] },
-        { en:"How are they?", es:["¿cómo están?"] },
-        { en:"What do you want?", es:["¿qué quieres?"] },
-        { en:"How old are you?", es:["¿cuántos años tienes?"] },
-        { en:"What time is it?", es:["¿qué hora es?"] },
-        { en:"Which one is it?", es:["¿cuál es?"] }
-      ]
-    }
+  // Global Spanish-read tokens (cap 7, commit-on-finish)
+  const GLOBAL_CHEATS_MAX = 7;
+  const GLOBAL_CHEATS_KEY = "tqplus:v3:globalCheats";
+
+  // ===================== DATA (present-based for all tenses) =====================
+  const PRESENT = {
+    1:[{en:"Who?",es:"¿Quién?"},{en:"What?",es:"¿Qué?"},{en:"Where?",es:"¿Dónde?"},{en:"When?",es:"¿Cuándo?"},{en:"Why?",es:"¿Por qué?"},{en:"How?",es:"¿Cómo?"},{en:"Which?",es:"¿Cuál?"},{en:"Whose?",es:"¿De quién?"},{en:"How many?",es:"¿Cuántos?"},{en:"How much?",es:"¿Cuánto?"},{en:"From where?",es:"¿De dónde?"},{en:"To where?",es:"¿Adónde?"},{en:"Since when?",es:"¿Desde cuándo?"},{en:"Until when?",es:"¿Hasta cuándo?"},{en:"How often?",es:"¿Con qué frecuencia?"},{en:"How old?",es:"¿Cuántos años?"}],
+    2:[{en:"Who is it?",es:"¿Quién es?"},{en:"What is it?",es:"¿Qué es?"},{en:"Where are you?",es:"¿Dónde estás?"},{en:"When is it?",es:"¿Cuándo es?"},{en:"Why is it cold?",es:"¿Por qué hace frío?"},{en:"How are you?",es:"¿Cómo estás?"},{en:"Which one?",es:"¿Cuál?"},{en:"Whose book is it?",es:"¿De quién es el libro?"},{en:"How many students?",es:"¿Cuántos estudiantes?"},{en:"How much money?",es:"¿Cuánto dinero?"},{en:"Where is it?",es:"¿Dónde está?"},{en:"When do we meet?",es:"¿Cuándo nos vemos?"}],
+    3:[{en:"Who are you?",es:"¿Quién eres?"},{en:"What do you want?",es:"¿Qué quieres?"},{en:"Where do you live?",es:"¿Dónde vives?"},{en:"When do you study?",es:"¿Cuándo estudias?"},{en:"Why are you here?",es:"¿Por qué estás aquí?"},{en:"How do you feel?",es:"¿Cómo te sientes?"},{en:"Which is your house?",es:"¿Cuál es tu casa?"},{en:"Whose idea is it?",es:"¿De quién es la idea?"},{en:"How many brothers do you have?",es:"¿Cuántos hermanos tienes?"},{en:"How much water do you drink?",es:"¿Cuánta agua bebes?"}],
+    4:[{en:"Who is your teacher?",es:"¿Quién es tu profesor?"},{en:"What time is it?",es:"¿Qué hora es?"},{en:"Where do you work?",es:"¿Dónde trabajas?"},{en:"When do you sleep?",es:"¿Cuándo duermes?"},{en:"Why are you sad?",es:"¿Por qué estás triste?"},{en:"How do you learn?",es:"¿Cómo aprendes?"},{en:"Which subject do you like?",es:"¿Qué asignatura te gusta?"},{en:"Whose car is this?",es:"¿De quién es este coche?"},{en:"How many friends do you have?",es:"¿Cuántos amigos tienes?"},{en:"How long is the class?",es:"¿Cuánto dura la clase?"}],
+    5:[{en:"Who are they?",es:"¿Quiénes son ellos?"},{en:"What are you doing?",es:"¿Qué haces?"},{en:"Where are you going?",es:"¿Adónde vas?"},{en:"When do you arrive?",es:"¿Cuándo llegas?"},{en:"Why are you late?",es:"¿Por qué llegas tarde?"},{en:"How do you know?",es:"¿Cómo sabes?"},{en:"Which one do you prefer?",es:"¿Cuál prefieres?"},{en:"Whose idea is that?",es:"¿De quién es esa idea?"},{en:"How many languages do you speak?",es:"¿Cuántos idiomas hablas?"},{en:"How much time do we have?",es:"¿Cuánto tiempo tenemos?"}],
+    6:[{en:"Who helps you?",es:"¿Quién te ayuda?"},{en:"What do you need?",es:"¿Qué necesitas?"},{en:"Where is your house?",es:"¿Dónde está tu casa?"},{en:"When do you eat lunch?",es:"¿Cuándo almuerzas?"},{en:"Why do you study Spanish?",es:"¿Por qué estudias español?"},{en:"How do you get to school?",es:"¿Cómo llegas a la escuela?"},{en:"Which class are you in?",es:"¿En qué clase estás?"},{en:"Whose turn is it?",es:"¿De quién es el turno?"},{en:"How many pets do you have?",es:"¿Cuántas mascotas tienes?"},{en:"How much does it cost?",es:"¿Cuánto cuesta?"}],
+    7:[{en:"Who helps you at home?",es:"¿Quién te ayuda en casa?"},{en:"What do you eat for breakfast?",es:"¿Qué desayunas?"},{en:"Where do you go on weekends?",es:"¿Adónde vas los fines de semana?"},{en:"When do you wake up?",es:"¿Cuándo te despiertas?"},{en:"Why do you run?",es:"¿Por qué corres?"},{en:"How do you feel today?",es:"¿Cómo te sientes hoy?"},{en:"Which movie do you like?",es:"¿Qué película te gusta?"},{en:"Whose phone is this?",es:"¿De quién es este teléfono?"},{en:"How many hours do you study?",es:"¿Cuántas horas estudias?"},{en:"How much homework do you have?",es:"¿Cuánta tarea tienes?"}],
+    8:[{en:"Who is calling?",es:"¿Quién llama?"},{en:"What are they doing?",es:"¿Qué hacen?"},{en:"Where do you go every day?",es:"¿Adónde vas cada día?"},{en:"When do you finish work?",es:"¿Cuándo terminas el trabajo?"},{en:"Why are you tired?",es:"¿Por qué estás cansado?"},{en:"How do you travel to school?",es:"¿Cómo viajas a la escuela?"},{en:"Which color do you like?",es:"¿Qué color te gusta?"},{en:"Whose bag is that?",es:"¿De quién es esa bolsa?"},{en:"How many people live here?",es:"¿Cuántas personas viven aquí?"},{en:"How much water do you drink every day?",es:"¿Cuánta agua bebes cada día?"}],
+    9:[{en:"Who opens the door?",es:"¿Quién abre la puerta?"},{en:"What do you say?",es:"¿Qué dices?"},{en:"Where do you go after class?",es:"¿Adónde vas después de clase?"},{en:"When do you arrive at school?",es:"¿Cuándo llegas a la escuela?"},{en:"Why do you leave early?",es:"¿Por qué te vas temprano?"},{en:"How do you do it?",es:"¿Cómo lo haces?"},{en:"Which car do you choose?",es:"¿Qué coche eliges?"},{en:"Whose shoes are these?",es:"¿De quién son estos zapatos?"},{en:"How many students pass?",es:"¿Cuántos estudiantes aprueban?"},{en:"How much milk do you drink?",es:"¿Cuánta leche bebes?"}],
+    10:[{en:"Who are you waiting for?",es:"¿A quién esperas?"},{en:"What are you thinking about?",es:"¿En qué piensas?"},{en:"Where do you want to go?",es:"¿Adónde quieres ir?"},{en:"When do you return home?",es:"¿Cuándo vuelves a casa?"},{en:"Why are you here?",es:"¿Por qué estás aquí?"},{en:"How do you learn so much?",es:"¿Cómo aprendes tanto?"},{en:"Which of these do you prefer?",es:"¿Cuál de estos prefieres?"},{en:"Whose turn is it to cook?",es:"¿De quién es el turno de cocinar?"},{en:"How many books do you read?",es:"¿Cuántos libros lees?"},{en:"How much time do we have?",es:"¿Cuánto tiempo tenemos?"}]
   };
+  const deepCopy = obj => JSON.parse(JSON.stringify(obj));
+  const DATASETS = { Present: PRESENT, Past: deepCopy(PRESENT), Future: deepCopy(PRESENT) };
 
-  // ------------------ STATE ------------------
-  let currentLevel = null;
-  let startedAt = 0;
-  let timerId = null;
-  let submitted = false;
-  let currentTense = "present";
-  let quiz = [];
+  // ===================== Global cheats =====================
+  const clampCheats = n => Math.max(0, Math.min(GLOBAL_CHEATS_MAX, n|0));
+  function getGlobalCheats(){
+    const v = localStorage.getItem(GLOBAL_CHEATS_KEY);
+    if (v == null) { localStorage.setItem(GLOBAL_CHEATS_KEY, String(GLOBAL_CHEATS_MAX)); return GLOBAL_CHEATS_MAX; }
+    const n = parseInt(v,10);
+    return Number.isFinite(n) ? clampCheats(n) : GLOBAL_CHEATS_MAX;
+  }
+  function setGlobalCheats(n){ localStorage.setItem(GLOBAL_CHEATS_KEY, String(clampCheats(n))); }
 
-  // ------------------ DOM ------------------
-  const levelsEl = $("#level-list");
-  const gameEl   = $("#game");
-  const qWrap    = $("#questions");
-  const timerEl  = $("#timer");
-  const resultsEl= $("#results");
-  const speakBtn = $("#speak-btn");
-  const readToggle = $("#read-toggle");
+  // ===================== Compare =====================
+  const norm = s => (s||"").trim();
+  const endsWithQM = s => norm(s).endsWith("?");
+  function core(s){
+    let t = norm(s);
+    if (t.startsWith("¿")) t = t.slice(1);
+    if (t.endsWith("?"))  t = t.slice(0,-1);
+    t = t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    t = t.replace(/ñ/gi, "n");
+    return t.replace(/\s+/g," ").toLowerCase();
+  }
+  function cmpAnswer(user, expected){ if (!endsWithQM(user)) return false; return core(user) === core(expected); }
 
-  // ------------------ INIT ------------------
-  document.addEventListener("DOMContentLoaded", () => {
-    // One-time fresh lock seed so only L1 is unlocked on this build’s first run
-    const INIT_KEY = "union:init:v1";
-    if (!localStorage.getItem(INIT_KEY)) {
-      Object.keys(localStorage)
-        .filter(k => k.startsWith("union:best:"))
-        .forEach(k => localStorage.removeItem(k));
-      localStorage.setItem(INIT_KEY, "1");
+  // ===================== Best/unlocks (per tense) =====================
+  const STORAGE_PREFIX = "tqplus:v3";
+  const bestKey = (tense, lvl) => `${STORAGE_PREFIX}:best:${tense}:${lvl}`;
+  function getBest(tense, lvl){ const v = localStorage.getItem(bestKey(tense,lvl)); const n = v==null?null:parseInt(v,10); return Number.isFinite(n)?n:null; }
+  function saveBest(tense, lvl, score){ const prev = getBest(tense,lvl); if (prev==null || score<prev) localStorage.setItem(bestKey(tense,lvl), String(score)); }
+  function isUnlocked(tense, lvl){ if (lvl===1) return true; const need = BASE_THRESH[lvl-1]; const prev = getBest(tense,lvl-1); return prev!=null && (need==null || prev<=need); }
+
+  // ===================== Helpers =====================
+  function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+  function speak(text, lang="es-ES"){ try{ if(!("speechSynthesis" in window)) return; const u=new SpeechSynthesisUtterance(text); u.lang=lang; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);}catch{} }
+  let rec=null, recActive=false;
+  function ensureRecognizer(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return null; if(!rec){ rec=new SR(); rec.lang="es-ES"; rec.interimResults=false; rec.maxAlternatives=1; } return rec; }
+  function startDictationFor(input,onStatus){
+    const r=ensureRecognizer(); if(!r){onStatus&&onStatus(false);return;}
+    if(recActive){try{r.stop();}catch{} recActive=false; onStatus&&onStatus(false);}
+    try{
+      r.onresult=e=>{ const txt=(e.results[0]&&e.results[0][0]&&e.results[0][0].transcript)||""; const v=txt.trim(); input.value = v.endsWith("?")?v:(v+"?"); input.dispatchEvent(new Event("input",{bubbles:true})); };
+      r.onend=()=>{recActive=false; onStatus&&onStatus(false);};
+      recActive=true; onStatus&&onStatus(true); r.start();
+    }catch{ onStatus&&onStatus(false); }
+  }
+  function miniBtn(text,title){ const b=document.createElement("button"); b.type="button"; b.textContent=text; b.title=title; b.setAttribute("aria-label",title);
+    Object.assign(b.style,{fontSize:"0.85rem",lineHeight:"1",padding:"4px 8px",marginLeft:"6px",border:"1px solid #ddd",borderRadius:"8px",background:"#fff",cursor:"pointer",verticalAlign:"middle"}); return b; }
+
+  // ===================== Celebration Styles & Helpers =====================
+  function injectCelebrationCSS(){
+    if (document.getElementById("tqplus-anim-style")) return;
+    const css = `
+    @keyframes tq-burst { 0%{transform:translateY(0) rotate(0)} 100%{transform:translateY(100vh) rotate(720deg); opacity:0} }
+    @keyframes tq-pop { 0%{transform:scale(0.6); opacity:0} 25%{transform:scale(1.05); opacity:1} 60%{transform:scale(1)} 100%{opacity:0} }
+    @keyframes tq-shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+    .tq-celebrate-overlay{ position:fixed; inset:0; z-index:9999; pointer-events:none; }
+    .tq-confetti{ position:absolute; width:8px; height:14px; border-radius:2px; opacity:0.95; will-change:transform,opacity; animation:tq-burst 1600ms ease-out forwards; }
+    .tq-perfect-banner{ position:fixed; left:50%; top:16%; transform:translateX(-50%); padding:10px 18px; border-radius:12px; font-weight:900; font-size:28px; letter-spacing:1px;
+      color:#fff; background:linear-gradient(90deg,#ff2d55,#ff9f0a); box-shadow:0 10px 30px rgba(0,0,0,0.25); animation:tq-pop 1800ms ease-out forwards; text-shadow:0 1px 2px rgba(0,0,0,0.35); }
+    .tq-shake{ animation:tq-shake 650ms ease-in-out; }
+    `;
+    const s=document.createElement("style"); s.id="tqplus-anim-style"; s.textContent=css; document.head.appendChild(s);
+  }
+
+  function showPerfectCelebration(){
+    injectCelebrationCSS();
+    // overlay
+    const overlay = document.createElement("div");
+    overlay.className = "tq-celebrate-overlay";
+    document.body.appendChild(overlay);
+
+    // make 120 confetti bits across width
+    const COLORS = ["#ff2d55","#ff9f0a","#ffd60a","#34c759","#0a84ff","#bf5af2","#ff375f"];
+    const W = window.innerWidth;
+    for (let i=0; i<120; i++){
+      const c = document.createElement("div");
+      c.className = "tq-confetti";
+      const size = 6 + Math.random()*8;
+      c.style.width  = `${size}px`;
+      c.style.height = `${size*1.4}px`;
+      c.style.left   = `${Math.random()*W}px`;
+      c.style.top    = `${-20 - Math.random()*120}px`;
+      c.style.background = COLORS[i % COLORS.length];
+      c.style.animationDelay = `${Math.random()*200}ms`;
+      c.style.transform = `rotate(${Math.random()*360}deg)`;
+      overlay.appendChild(c);
     }
 
-    // Read toggle: no audio unless ON
-    readToggle.addEventListener("change", () => {
-      speakBtn.disabled = !readToggle.checked;
-    });
-    speakBtn.disabled = !readToggle.checked;
+    // banner
+    const banner = document.createElement("div");
+    banner.className = "tq-perfect-banner";
+    banner.textContent = "PERFECT!";
+    document.body.appendChild(banner);
 
-    // Speak current focused prompt if toggle is on
-    speakBtn.addEventListener("click", () => {
-      if (!readToggle.checked) return;
-      const focused = document.activeElement;
-      const label = focused?.previousElementSibling?.textContent?.trim()
-                 || qWrap.querySelector(".question-item label")?.textContent?.trim();
-      if (label) speak(label, "es-ES");
+    // cleanup after 2.2s
+    setTimeout(()=>{ overlay.remove(); banner.remove(); }, 2200);
+  }
+
+  // ===================== UI flow =====================
+  let CURRENT_TENSE = "Present";
+  let quiz = [], currentLevel = null, t0=0, timerId=null, submitted=false;
+
+  // attempt-local token tracking (commit on finish)
+  let cheatsUsedThisRound = 0;
+  let globalSnapshotAtStart = 0;
+  const attemptRemaining = () => Math.max(0, globalSnapshotAtStart - cheatsUsedThisRound);
+
+  function updateESButtonsState(container){
+    const left = attemptRemaining();
+    const esBtns = Array.from(container.querySelectorAll('button[data-role="es-tts"]'));
+    esBtns.forEach(btn=>{
+      const active = left>0;
+      btn.disabled = !active;
+      btn.style.opacity = active ? "1" : "0.5";
+      btn.style.cursor  = active ? "pointer" : "not-allowed";
+      btn.title = active ? `Read Spanish target (uses 1; attempt left: ${left})` : "No Spanish reads left for this attempt";
     });
+  }
+
+  function startTimer(){
+    t0 = Date.now();
+    clearInterval(timerId);
+    timerId = setInterval(()=>{ const t=Math.floor((Date.now()-t0)/1000); const el=$("#timer"); if(el) el.textContent=`Time: ${t}s`; },200);
+  }
+  function stopTimer(){ clearInterval(timerId); timerId=null; return Math.floor((Date.now()-t0)/1000); }
+
+  function renderLevels(){
+    const host = $("#level-list"); if(!host) return;
+    host.innerHTML = "";
+    const ds = DATASETS[CURRENT_TENSE] || {};
+    const available = Object.keys(ds).map(n=>parseInt(n,10)).filter(Number.isFinite).sort((a,b)=>a-b);
+    available.forEach(i=>{
+      const unlocked = isUnlocked(CURRENT_TENSE,i);
+      const best = getBest(CURRENT_TENSE,i);
+      const btn = document.createElement("button");
+      btn.className="level-btn"; btn.disabled=!unlocked;
+      btn.textContent = unlocked?`Level ${i}`:`🔒 Level ${i}`;
+      if (unlocked && best!=null){
+        const span=document.createElement("span"); span.className="best"; span.textContent=` (Best Score: ${best}s)`; btn.appendChild(span);
+      }
+      if (unlocked) btn.onclick=()=>startLevel(i);
+      host.appendChild(btn);
+    });
+    host.style.display="flex"; const gm=$("#game"); if(gm) gm.style.display="none";
+  }
+
+  function startLevel(level){
+    currentLevel = level; submitted=false; cheatsUsedThisRound=0; globalSnapshotAtStart=getGlobalCheats();
+    const lv=$("#level-list"); if(lv) lv.style.display="none";
+    const res=$("#results"); if(res) res.innerHTML="";
+    const gm=$("#game"); if(gm) gm.style.display="block";
+
+    const pool=(DATASETS[CURRENT_TENSE]?.[level])||[];
+    const sample=Math.min(QUESTIONS_PER_ROUND,pool.length);
+    quiz = shuffle(pool).slice(0,sample).map(it=>({prompt:it.en, answer:it.es, user:""}));
+
+    renderQuiz(); startTimer();
+  }
+
+  function renderQuiz(){
+    const qwrap=$("#questions"); if(!qwrap) return; qwrap.innerHTML="";
+    quiz.forEach((q,i)=>{
+      const row=document.createElement("div"); row.className="q";
+
+      const p=document.createElement("div"); p.className="prompt"; p.textContent=`${i+1}. ${q.prompt}`;
+      const controls=document.createElement("span");
+      Object.assign(controls.style,{display:"inline-block",marginLeft:"6px",verticalAlign:"middle"});
+
+      const enBtn=miniBtn("🔈 EN","Read English prompt"); enBtn.onclick=()=>speak(q.prompt,"en-GB");
+      const esBtn=miniBtn("🔊 ES","Read Spanish target (uses 1 this attempt)"); esBtn.setAttribute("data-role","es-tts");
+      esBtn.onclick=()=>{ if (attemptRemaining()<=0){ updateESButtonsState(qwrap); return; } speak(q.answer,"es-ES"); cheatsUsedThisRound+=1; updateESButtonsState(qwrap); };
+      const micBtn=miniBtn("🎤","Dictate into this answer"); micBtn.onclick=()=>{ startDictationFor(input,(on)=>{ micBtn.style.borderColor=on?"#f39c12":"#ddd"; micBtn.style.boxShadow=on?"0 0 0 2px rgba(243,156,18,0.25)":"none"; }); };
+
+      controls.appendChild(enBtn); controls.appendChild(esBtn); controls.appendChild(micBtn); p.appendChild(controls);
+
+      const input=document.createElement("input"); input.type="text"; input.placeholder="Type the Spanish here (must end with ?)";
+      input.oninput=e=>{ quiz[i].user=e.target.value; };
+      input.addEventListener("keydown",(e)=>{ if(e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey){ if(e.code==="KeyR"){e.preventDefault();enBtn.click();} else if(e.code==="KeyS"){e.preventDefault();esBtn.click();} else if(e.code==="KeyM"){e.preventDefault();micBtn.click();} }});
+
+      row.appendChild(p); row.appendChild(input); qwrap.appendChild(row);
+    });
+    updateESButtonsState(qwrap);
+
+    const submit=$("#submit"); if(submit){ submit.disabled=false; submit.textContent="Finish & Check"; submit.onclick=finishAndCheck; }
+    const back=$("#back-button"); if(back){ back.style.display="inline-block"; back.onclick=backToLevels; }
+  }
+
+  function finishAndCheck(){
+    if (submitted) return; submitted=true;
+
+    const elapsed=stopTimer();
+    const inputs=$$("#questions input"); inputs.forEach((inp,i)=>{ quiz[i].user=inp.value; });
+
+    let correct=0, wrong=0;
+    quiz.forEach((q,i)=>{ const ok=cmpAnswer(q.user,q.answer); if(ok) correct++; else wrong++; inputs[i].classList.remove("good","bad"); inputs[i].classList.add(ok?"good":"bad"); inputs[i].readOnly=true; inputs[i].disabled=true; });
+
+    const penalties = wrong*PENALTY_PER_WRONG;
+    const finalScore = elapsed + penalties;
+
+    const submit=$("#submit"); if(submit){ submit.disabled=true; submit.textContent="Checked"; }
+
+    // Unlock message
+    let unlockMsg="";
+    if (currentLevel<10){
+      const need=BASE_THRESH[currentLevel];
+      if (typeof need==="number"){
+        if (finalScore<=need) unlockMsg=`🎉 Next level unlocked! (Needed ≤ ${need}s)`;
+        else unlockMsg=`🔓 Need ${finalScore-need}s less to unlock Level ${currentLevel+1} (Target ≤ ${need}s).`;
+      }
+    } else unlockMsg="🏁 Final level — great work!";
+
+    // ===== Commit global tokens now =====
+    const before = getGlobalCheats();
+    let after = clampCheats(globalSnapshotAtStart - cheatsUsedThisRound);
+    const perfect = (correct===quiz.length);
+    if (perfect && after<GLOBAL_CHEATS_MAX) after = clampCheats(after+1);
+    setGlobalCheats(after);
+
+    // Results UI
+    const results=$("#results"); if(!results) return;
+    const summary=document.createElement("div"); summary.className="result-summary";
+    summary.innerHTML =
+      `<div class="line" style="font-size:1.35rem; font-weight:800;">🏁 FINAL SCORE: ${finalScore}s</div>
+       <div class="line">⏱️ Time: <strong>${elapsed}s</strong></div>
+       <div class="line">➕ Penalties: <strong>${wrong} × ${PENALTY_PER_WRONG}s = ${penalties}s</strong></div>
+       <div class="line">✅ Correct: <strong>${correct}/${quiz.length}</strong></div>
+       <div class="line" style="margin-top:8px;"><strong>${unlockMsg}</strong></div>
+       <div class="line" style="margin-top:8px;">🎧 Spanish reads used this round: <strong>${cheatsUsedThisRound}</strong> &nbsp;|&nbsp; Global after commit: <strong>${after}/${GLOBAL_CHEATS_MAX}</strong></div>`;
+
+    // Celebrate on perfect
+    if (perfect){
+      showPerfectCelebration();
+      // subtle shake on the summary box so it "feels" like a win
+      summary.classList.add("tq-shake");
+      const bonusNote = document.createElement("div");
+      bonusNote.className = "line";
+      bonusNote.style.marginTop = "6px";
+      bonusNote.innerHTML = (after>before)
+        ? `⭐ Perfect round! Spanish-read tokens: ${before} → ${after} (max ${GLOBAL_CHEATS_MAX}).`
+        : `⭐ Perfect round! (Spanish-read tokens already at max ${GLOBAL_CHEATS_MAX}).`;
+      summary.appendChild(bonusNote);
+    }
+
+    const ul=document.createElement("ul");
+    quiz.forEach(q=>{
+      const li=document.createElement("li"); const ok=cmpAnswer(q.user,q.answer);
+      li.className=ok?"correct":"incorrect";
+      li.innerHTML = `${q.prompt} — <strong>${q.answer}</strong>` + (ok?"":` &nbsp;❌&nbsp;(you: “${q.user||""}”)`);
+      ul.appendChild(li);
+    });
+
+    const again=document.createElement("button");
+    again.className="try-again"; again.textContent="Try Again"; again.onclick=()=>startLevel(currentLevel);
+
+    results.innerHTML=""; results.appendChild(summary); results.appendChild(ul); results.appendChild(again);
+
+    saveBest(CURRENT_TENSE,currentLevel,finalScore);
+    summary.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  function backToLevels(){ stopTimer(); const gm=$("#game"); if(gm) gm.style.display="none"; renderLevels(); }
+
+  // ===================== Init =====================
+  document.addEventListener("DOMContentLoaded", ()=>{
+    // init global cheats
+    setGlobalCheats(getGlobalCheats());
+
+    // tense switching (present-based datasets across all)
+    $$("#tense-buttons .tense-button").forEach(btn=>{
+      btn.addEventListener("click", e=>{
+        e.preventDefault();
+        const t = btn.dataset.tense || btn.textContent.trim();
+        if (!DATASETS[t]) return;
+        $$("#tense-buttons .tense-button").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        CURRENT_TENSE = t;
+        backToLevels();
+      });
+    });
+
+    // default active
+    const presentBtn = $(`#tense-buttons .tense-button[data-tense="Present"]`) || $$("#tense-buttons .tense-button")[0];
+    if (presentBtn) presentBtn.classList.add("active");
 
     renderLevels();
   });
-
-  // ------------------ LEVEL LOCKS ------------------
-  function bestKey(level, tense) { return `union:best:${tense}:${level}`; }
-  function getBest(level, tense) {
-    const v = localStorage.getItem(bestKey(level,tense));
-    const n = v==null ? NaN : Number(v);
-    return Number.isFinite(n) ? n : Infinity;
-  }
-  function setBest(level, tense, secs) {
-    const cur = getBest(level, tense);
-    if (secs < cur) localStorage.setItem(bestKey(level,tense), String(secs));
-  }
-
-  function renderLevels(){
-    levelsEl.innerHTML = "";
-    const lvlIds = Object.keys(BANK[currentTense]).sort();
-
-    lvlIds.forEach((id, idx) => {
-      const btn = document.createElement("button");
-      btn.className = "level-btn";
-
-      // lock all except L1 initially; then apply rules
-      btn.disabled = id !== "L1";
-
-      // Unlock chain: each level unlocks if previous best ≤ rule
-      if (id !== "L1") {
-        const prevId = "L" + (parseInt(id.slice(1),10)-1);
-        const rule = UNLOCK_RULES[id];
-        const prevBest = getBest(prevId, currentTense);
-        if (Number.isFinite(prevBest) && rule != null && prevBest <= rule) {
-          btn.disabled = false;
-        }
-      }
-
-      btn.textContent = btn.disabled ? `🔒 ${id}` : id;
-      btn.addEventListener("click", () => startLevel(id));
-      levelsEl.appendChild(btn);
-    });
-
-    // reset game area
-    gameEl.style.display = "none";
-    resultsEl.innerHTML = "";
-  }
-
-  // ------------------ BUILD ROUND ------------------
-  function startLevel(levelId){
-    currentLevel = levelId;
-    submitted = false;
-    levelsEl.style.display = "none";
-    gameEl.style.display   = "block";
-    resultsEl.innerHTML = "";
-    $("#back-button").style.display = "inline-block";
-
-    // build questions
-    const pool = BANK[currentTense][levelId] || [];
-    shuffle(pool);
-    quiz = (pool.slice(0, QUESTIONS_PER_ROUND)).map(item => ({
-      prompt: item.en,
-      expected: item.es,  // array of forms
-      user: ""
-    }));
-
-    renderQuestions();
-    startTimer();
-  }
-
-  function renderQuestions(){
-    qWrap.innerHTML = "";
-    quiz.forEach((q, i) => {
-      const row = document.createElement("div");
-      row.className = "question-item";
-      const label = document.createElement("label");
-      label.textContent = q.prompt;
-      label.htmlFor = `q${i}`;
-      const input = document.createElement("input");
-      input.type = "text";
-      input.id = `q${i}`;
-      input.autocomplete = "off";
-      input.spellcheck = false;
-      input.addEventListener("input", e => { q.user = e.target.value; });
-      row.appendChild(label);
-      row.appendChild(input);
-      qWrap.appendChild(row);
-    });
-
-    // controls
-    $("#submit").onclick = finishAndCheck;
-    $("#back-button").onclick = backToLevels;
-
-    // DO NOT auto read on load (toggle controls reading)
-  }
-
-  // ------------------ TIMER ------------------
-  function startTimer(){
-    stopTimer();
-    startedAt = Date.now();
-    timerId = setInterval(() => {
-      timerEl.textContent = formatTime(Math.floor((Date.now()-startedAt)/1000));
-    }, 200);
-  }
-  function stopTimer(){
-    if (timerId) clearInterval(timerId);
-    timerId = null;
-    return Math.floor((Date.now()-startedAt)/1000);
-  }
-  function formatTime(s){
-    const m = Math.floor(s/60), r=s%60;
-    return `${String(m).padStart(2,"0")}:${String(r).padStart(2,"0")}`;
-  }
-
-  // ------------------ COMPARISON & FEEDBACK ------------------
-  function normalizeStrict(s){
-    return (s ?? "")
-      .normalize("NFC")
-      .trim()
-      .replace(/\s+/g, " ")
-      .toLowerCase();
-  }
-  function isQuestion(s){ const t=(s||"").trim(); return t.startsWith("¿") || t.endsWith("?"); }
-  function equalWithEnye(a,b){
-    if (a===b) return true;
-    return a.replace(/ñ/g,"n") === b.replace(/ñ/g,"n");
-  }
-  function cmpOne(studentRaw, expectedRaw){
-    if (isQuestion(expectedRaw) && !isQuestion(studentRaw)) return false;
-    return equalWithEnye(normalizeStrict(studentRaw), normalizeStrict(expectedRaw));
-  }
-  function isCorrect(studentRaw, expected){
-    const targets = Array.isArray(expected) ? expected : [expected];
-    return targets.some(t => cmpOne(studentRaw, t));
-  }
-
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;");
-  }
-  function tokenSplit(str){
-    return String(str ?? "").split(/(\s+|[,.!?;:¿¡()«»"“”'’])/g).filter(Boolean);
-  }
-  function highlightDiff(expectedRaw, receivedRaw){
-    const e = tokenSplit(expectedRaw);
-    const r = tokenSplit(receivedRaw);
-    const eOut = [], rOut = [];
-    const max = Math.max(e.length, r.length);
-    for (let i=0;i<max;i++){
-      const et = e[i] ?? "";
-      const rt = r[i] ?? "";
-      const ok = equalWithEnye(normalizeStrict(et), normalizeStrict(rt));
-      if (!et && rt){ rOut.push(`<b class="u">${escapeHtml(rt)}</b>`); }
-      else if (et && !rt){ eOut.push(`<b class="u">${escapeHtml(et)}</b>`); }
-      else if (ok){ eOut.push(escapeHtml(et)); rOut.push(escapeHtml(rt)); }
-      else { eOut.push(`<b class="u">${escapeHtml(et)}</b>`); rOut.push(`<b class="u">${escapeHtml(rt)}</b>`); }
-    }
-    return { expectedHtml: eOut.join(""), receivedHtml: rOut.join("") };
-  }
-
-  // ------------------ SUBMISSION ------------------
-  function finishAndCheck(){
-    if (submitted) return;
-    submitted = true;
-
-    const secs = stopTimer();
-
-    let wrong = 0;
-    const items = qWrap.querySelectorAll(".question-item input");
-
-    const list = document.createElement("ul");
-
-    quiz.forEach((q, i) => {
-      const ok = isCorrect(q.user, q.expected);
-      if (!ok) wrong++;
-
-      const li = document.createElement("li");
-      li.className = ok ? "correct" : "incorrect";
-
-      const canonical = Array.isArray(q.expected) ? q.expected[0] : q.expected;
-      const diff = ok
-        ? { expectedHtml: escapeHtml(canonical), receivedHtml: escapeHtml(q.user||"") }
-        : highlightDiff(canonical, q.user||"");
-
-      li.innerHTML = `
-        <div class="prompt"><strong>${escapeHtml(q.prompt)}</strong></div>
-        <div class="you">You: ${diff.receivedHtml || "(blank)"}</div>
-        <div class="exp">Expected: <strong>${diff.expectedHtml}</strong></div>
-      `;
-      list.appendChild(li);
-
-      // lock inputs
-      items[i].readOnly = true;
-      items[i].disabled = true;
-    });
-
-    const penalty = wrong * PENALTY_PER_WRONG;
-    const finalScore = secs + penalty;
-
-    resultsEl.innerHTML = `
-      <p><strong>Time:</strong> ${formatTime(secs)} &nbsp; + &nbsp;
-         <strong>Penalty:</strong> ${penalty}s &nbsp; = &nbsp;
-         <strong>Score:</strong> ${formatTime(finalScore)}</p>
-    `;
-    resultsEl.appendChild(list);
-
-    // Save best and apply locks
-    setBest(currentLevel, currentTense, finalScore);
-    // show a Try Again and Back button inline:
-    const again = document.createElement("button");
-    again.className = "submit";
-    again.textContent = "Try Again";
-    again.onclick = () => startLevel(currentLevel);
-
-    const back = document.createElement("button");
-    back.className = "cancel";
-    back.textContent = "Back to Levels";
-    back.onclick = backToLevels;
-
-    const row = document.createElement("div");
-    row.className = "actions";
-    row.appendChild(again);
-    row.appendChild(back);
-    resultsEl.appendChild(row);
-
-    // update level list in background so unlock becomes visible on return
-    // (don’t force-goto the list; user can try again)
-  }
-
-  function backToLevels(){
-    gameEl.style.display = "none";
-    levelsEl.style.display = "grid";
-    renderLevels();
-  }
-
-  // ------------------ VOICE ------------------
-  let VOICES_READY = false;
-  let ES_VOICE = null;
-  function loadVoices(){
-    return new Promise(res => {
-      const set = () => {
-        const v = window.speechSynthesis?.getVoices() || [];
-        if (v.length) {
-          ES_VOICE = v.find(x => /^es(?:-|_)/i.test(x.lang)) || null;
-          VOICES_READY = true;
-          res();
-          return true;
-        }
-        return false;
-      };
-      if (!set()) setTimeout(() => { if (!set()) setTimeout(set, 200); }, 150);
-      window.speechSynthesis?.addEventListener?.("voiceschanged", set, { once:true });
-    });
-  }
-  async function speak(text, lang="es-ES"){
-    try {
-      if (!("speechSynthesis" in window)) return;
-      if (!VOICES_READY) await loadVoices();
-      const u = new SpeechSynthesisUtterance(String(text));
-      if (ES_VOICE) u.voice = ES_VOICE;
-      u.lang = ES_VOICE?.lang || lang;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(u);
-    } catch {}
-  }
-
-  // ------------------ UTILS ------------------
-  function shuffle(a){ for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
 })();
